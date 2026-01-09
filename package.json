@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun --hot src/main.ts"
+    "dev": "bun --watch src/main.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.11",
