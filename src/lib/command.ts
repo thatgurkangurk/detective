@@ -1,6 +1,7 @@
 /**
  * Module/command system inspiration (and parts of the code) come from github.com/Skekdog/Skekbot, MIT license.
  */
+import type { ConsolaInstance } from "consola";
 import type {
   ChatInputCommandInteraction,
   SlashCommandOptionsOnlyBuilder,
@@ -9,5 +10,10 @@ import type {
 export type Command = {
   devServerOnly?: boolean;
   data: SlashCommandOptionsOnlyBuilder;
-  execute(interaction: ChatInputCommandInteraction): Promise<void>;
+  execute(
+    interaction: ChatInputCommandInteraction,
+    utils: {
+      logger: ConsolaInstance;
+    }
+  ): Promise<void>;
 };

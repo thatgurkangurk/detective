@@ -2,7 +2,7 @@ import { ActivityType, SlashCommandBuilder } from "discord.js";
 import type { Command } from "../lib/command";
 import type { Module } from "../lib/modules";
 
-const command = {
+const pingCommand = {
   data: new SlashCommandBuilder()
     .setName("ping")
     .setDescription("ping the bot"),
@@ -21,6 +21,6 @@ export const baseModule = {
       });
     });
 
-    util.loadCommand(command);
+    util.loadCommand(pingCommand);
   },
 } satisfies Module;

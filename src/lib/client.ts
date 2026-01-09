@@ -10,6 +10,7 @@ import {
   Collection,
   Routes,
 } from "discord.js";
+import { env } from "../env";
 import type { Command } from "./command";
 import type { Module } from "./modules";
 
@@ -31,7 +32,9 @@ export class DetectiveClient extends Client {
     }
 
     try {
-      await command.execute(interaction);
+      await command.execute(interaction, {
+        logger: this.logger,
+      });
     } catch (err) {
       this.logger.error(err);
       if (interaction.replied || interaction.deferred) {
@@ -72,6 +75,28 @@ export class DetectiveClient extends Client {
       });
 
       this.logger.success(`published ${globalCommands.length} global commands`);
+
+      if (env.DEV_SERVER_ID) {
+        const devCommands = this.commands
+          .filter((command) => command.devServerOnly)
+          .map((command) => command.data);
+
+        if (!(devCommands.length > 0)) return;
+
+        this.logger.start(`publishing ${devCommands.length} dev commands`);
+
+        await this.rest.put(
+          Routes.applicationGuildCommands(
+            this.application.id,
+            env.DEV_SERVER_ID.toString()
+          ),
+          {
+            body: devCommands,
+          }
+        );
+
+        this.logger.success(`published ${globalCommands.length} dev commands`);
+      }
     } catch (err) {
       this.logger.error(err);
     }
