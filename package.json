@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "build": "bun build --compile --minify --outfile server src/main.ts",
     "dev": "bun --watch src/main.ts"
   },
   "devDependencies": {
