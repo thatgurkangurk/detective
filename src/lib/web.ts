@@ -13,6 +13,10 @@ const MessageRequest = z.object({
 });
 
 export const app = new Elysia()
+  .onError(({ error }) => {
+    console.error(error);
+    return new Response("whoops, something went wrong");
+  })
   .use(
     openapi({
       documentation: {
