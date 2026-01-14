@@ -19,7 +19,7 @@ FROM gcr.io/distroless/base
 WORKDIR /app
 
 COPY --from=build /app/server server
-COPY ./public public
+COPY public public
 
 ENV NODE_ENV=production
 EXPOSE 3000
