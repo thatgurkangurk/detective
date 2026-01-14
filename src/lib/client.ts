@@ -53,13 +53,7 @@ export class DetectiveClient extends Client {
     }
   }
 
-  private async loadCommands() {
-    this.on("interactionCreate", async (interaction) => {
-      if (interaction.isChatInputCommand()) {
-        await this.respondToChatCommand(interaction);
-      }
-    });
-
+  private async registerCommands() {
     if (!this.application)
       throw new Error("this bot doesn't seem to have an application");
 
@@ -102,6 +96,14 @@ export class DetectiveClient extends Client {
     }
   }
 
+  private async loadCommands() {
+    this.on("interactionCreate", async (interaction) => {
+      if (interaction.isChatInputCommand()) {
+        await this.respondToChatCommand(interaction);
+      }
+    });
+  }
+
   constructor(
     options: ClientOptions & {
       modules: Module[];
@@ -120,7 +122,12 @@ export class DetectiveClient extends Client {
     });
 
     this.once("clientReady", async () => {
-      if (this.commands.size > 0) await this.loadCommands();
+      if (this.commands.size > 0) {
+        await this.loadCommands();
+        if (!env.IS_DEV) {
+          await this.registerCommands();
+        }
+      }
     });
   }
 }
