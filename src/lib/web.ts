@@ -41,9 +41,13 @@ export const app = new Elysia()
   .state("client", bot)
   .use(bearerAuth())
   .use(
-    await staticPlugin({
-      prefix: "/",
-    })
+    env.IS_DEV
+      ? await staticPlugin({
+          prefix: "/",
+        })
+      : staticPlugin({
+          prefix: "/",
+        })
   )
   .get("/", "nothing to see here")
   .get("/status", ({ store: { client } }) => {
