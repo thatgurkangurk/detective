@@ -79,3 +79,6 @@ export const app = new Elysia()
 export type API = typeof app;
 
 app.listen(3000);
+console.log(
+  `web server running on ${app.server?.hostname}:${app.server?.port}`
+);
