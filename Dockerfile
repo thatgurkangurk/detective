@@ -6,6 +6,7 @@ WORKDIR /app
 COPY package.json package.json
 COPY bun.lock bun.lock
 COPY bunfig.toml bunfig.toml
+COPY build.ts build.ts
 
 RUN bun install
 
