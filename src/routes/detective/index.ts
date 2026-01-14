@@ -1,5 +1,5 @@
 import { treaty } from "@elysiajs/eden";
-import type { API } from "../../src/lib/web";
+import type { API } from "../../lib/web";
 
 const app = treaty<API>(location.origin);
 

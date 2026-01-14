@@ -5,6 +5,7 @@ import { Elysia, status } from "elysia";
 import * as z from "zod/v4";
 import { client as bot } from "../bot";
 import { env } from "../env";
+import detectiveIndex from "../routes/detective/index.html";
 
 const MessageRequest = z.object({
   channelId: z.string(),
@@ -40,16 +41,8 @@ export const app = new Elysia()
   )
   .state("client", bot)
   .use(bearerAuth())
-  .use(
-    env.IS_DEV
-      ? await staticPlugin({
-          prefix: "/",
-        })
-      : staticPlugin({
-          prefix: "/",
-        })
-  )
   .get("/", "nothing to see here")
+  .get("/detective", detectiveIndex)
   .get("/status", ({ store: { client } }) => {
     return {
       clientReady: client.isReady(),

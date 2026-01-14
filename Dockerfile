@@ -9,18 +9,21 @@ COPY bun.lock bun.lock
 RUN bun install
 
 COPY ./src ./src
-COPY ./public ./public
+COPY ./tsconfig.json ./tsconfig.json
 
 ENV NODE_ENV=production
 
 RUN bun run build
 
-FROM gcr.io/distroless/base
+FROM frolvlad/alpine-glibc
 
 WORKDIR /app
 
+RUN apk --no-cache add libstdc++ libgcc
+
 COPY --from=build /app/server server
-COPY --from=build /app/public public
+
+RUN chmod +x ./server
 
 ENV NODE_ENV=production
 EXPOSE 3000
