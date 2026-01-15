@@ -1,6 +1,6 @@
 import { bearer as bearerAuth } from "@elysiajs/bearer";
 import { openapi } from "@elysiajs/openapi";
-import { staticPlugin } from "@elysiajs/static";
+import { ActivityType } from "discord.js";
 import { Elysia, status } from "elysia";
 import * as z from "zod/v4";
 import { client as bot } from "../bot";
@@ -14,10 +14,6 @@ const MessageRequest = z.object({
 });
 
 export const app = new Elysia()
-  .onError(({ error }) => {
-    console.error(error);
-    return new Response("whoops, something went wrong");
-  })
   .use(
     openapi({
       documentation: {
@@ -48,14 +44,17 @@ export const app = new Elysia()
       clientReady: client.isReady(),
     };
   })
-  .post(
-    "/message",
-    async ({ body, bearer, store: { client } }) => {
+  .macro("auth", () => ({
+    beforeHandle({ bearer }) {
       if (!bearer) return status(401, "Unauthorized");
       if (!env.WEB_PASSWORD) return status(401, "Unauthorized");
 
       if (bearer !== env.WEB_PASSWORD) return status(403, "Forbidden");
-
+    },
+  }))
+  .post(
+    "/client/message",
+    async ({ body, store: { client } }) => {
       const channel = await client.channels.fetch(body.channelId);
       if (!channel || !channel.isSendable())
         return status(400, "invalid channel");
@@ -74,6 +73,25 @@ export const app = new Elysia()
     },
     {
       body: MessageRequest,
+      auth: true,
+    }
+  )
+  .post(
+    "/client/status",
+    async ({ body, store: { client } }) => {
+      client.user?.setActivity({
+        name: body.name,
+        type: body.type,
+      });
+
+      return "success";
+    },
+    {
+      auth: true,
+      body: z.object({
+        type: z.enum(ActivityType),
+        name: z.string(),
+      }),
     }
   );
 

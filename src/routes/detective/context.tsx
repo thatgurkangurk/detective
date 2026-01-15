@@ -1,3 +1,3 @@
-import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
-export const passwordAtom = atom<string>("");
+export const passwordAtom = atomWithStorage<string>("web_password", "");

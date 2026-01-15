@@ -12,6 +12,7 @@
         "@t3-oss/env-core": "^0.13.10",
         "@tanstack/react-query": "^5.90.17",
         "consola": "^3.4.2",
+        "discord-api-types": "^0.38.37",
         "discord.js": "^14.25.1",
         "elysia": "^1.4.22",
         "jotai": "^2.16.2",
